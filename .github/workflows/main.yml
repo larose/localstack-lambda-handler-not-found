@@ -1,0 +1,37 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  repro:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Repro
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+        run: |
+          set -o xtrace
+
+          docker-compose up --build --detach localstack
+
+          zip lambda.zip index.js
+          unzip -l lambda.zip
+          unzip -c lambda.zip
+
+          sleep 10
+
+          aws --version
+          aws --endpoint http://localhost:4566 lambda create-function --function-name fn --runtime nodejs12.x --zip-file fileb://lambda.zip --handler index.main --role arn:aws:iam::123456:role/irrelevant
+          aws --endpoint http://localhost:4566 lambda get-function --function-name fn
+          aws --endpoint http://localhost:4566 lambda invoke --function-name fn --payload '[]' result.txt
+
+          cat result.txt
+          docker logs localstack
