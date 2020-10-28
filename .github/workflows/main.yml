@@ -22,14 +22,14 @@ jobs:
 
           docker-compose up --build --detach localstack
 
-          zip lambda.zip index.py
+          zip lambda.zip handler.py
           unzip -l lambda.zip
           unzip -c lambda.zip
 
           sleep 10
 
           aws --version
-          aws --endpoint http://localhost:4566 lambda create-function --function-name fn --runtime python3.8 --zip-file fileb://lambda.zip --handler index.main --role arn:aws:iam::123456:role/irrelevant
+          aws --endpoint http://localhost:4566 lambda create-function --function-name fn --runtime python3.8 --zip-file fileb://lambda.zip --handler handler.handler --role arn:aws:iam::123456:role/irrelevant
           aws --endpoint http://localhost:4566 lambda get-function --function-name fn
           aws --endpoint http://localhost:4566 lambda invoke --function-name fn --payload '[]' result.txt
 
