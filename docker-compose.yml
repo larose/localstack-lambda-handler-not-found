@@ -10,6 +10,7 @@ services:
       - LAMBDA_DOCKER_NETWORK=host
       - LAMBDA_EXECUTOR=docker
       - LAMBDA_REMOVE_CONTAINERS=false
+      - LAMBDA_REMOTE_DOCKER=true
       - SERVICES=lambda
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
