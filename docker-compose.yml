@@ -8,7 +8,7 @@ services:
     environment:
       - DEBUG=1
       - LAMBDA_DOCKER_NETWORK=host
-      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_EXECUTOR=docker-reuse
       - SERVICES=lambda
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
